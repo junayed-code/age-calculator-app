@@ -1,0 +1,29 @@
+$variables: (
+  clr-primary: hsl(259, 100%, 65%),
+  clr-secondary: hsl(0, 1%, 44%),
+  clr-light-red: hsl(0, 100%, 67%),
+  clr-white: hsl(0, 0%, 100%),
+  clr-off-white: hsl(0, 0%, 94%),
+  clr-light-grey: hsl(0, 0%, 86%),
+  clr-off-black: hsl(0, 0%, 8%),
+  // container width
+  width-con: 67rem,
+  ff-base: '"Poppins", system-ui',
+  fw-regular: 400,
+  fw-bold: 700,
+  fw-ex-bold: 800,
+
+  fs-1: 1.2rem,
+  fs-2: 1.42rem,
+  fs-3: 2.365rem,
+  fs-4: clamp(5.15rem, 4.75vw + 1rem, 7.7rem),
+  space-1: 0.67rem,
+  space-2: 1.25rem,
+);
+
+:root {
+  // convert sass variables to css custom properties
+  @each $color, $value in $variables {
+    --#{$color}: #{$value};
+  }
+}

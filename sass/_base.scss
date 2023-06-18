@@ -1,0 +1,42 @@
+@use "./mixin" as *;
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  box-sizing: inherit;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+button,
+input {
+  font: inherit;
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
+
+body {
+  box-sizing: border-box;
+  font-size: var(--fs-1);
+  font-family: var(--ff-base);
+  font-weight: var(--fw-bold);
+  @include set-props(background-color, clr-off-white);
+}
+
+footer {
+  width: 100%;
+  padding: 1rem 3rem 3rem;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  z-index: -1;
+}

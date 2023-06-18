@@ -1,0 +1,51 @@
+@use "./mixin" as *;
+
+input[type="number"]::-webkit-inner-spin-button {
+  display: none;
+}
+
+input[type="number"] {
+  appearance: textfield;
+}
+
+.sr-only {
+  height: 1px;
+  width: 1px;
+  padding: 0;
+  margin: -1px;
+  border-width: 0;
+  position: absolute;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+.invalid-feedback {
+  line-height: 1;
+  font-style: italic;
+  min-height: 2.41rem;
+  font-weight: var(--fw-regular);
+  @include set-props(color, clr-light-red);
+}
+
+.line {
+  border: none;
+  margin: 4.5rem 0 5rem;
+  border-top: 1.5px solid var(--clr-light-grey);
+}
+
+.flex-group {
+  @include display-flex;
+}
+
+.container {
+  --border-clr: var(--clr-light-grey);
+  --padding: 4rem 2.4rem;
+  --br: 1.6rem 1.6rem 9rem 1.6rem;
+
+  width: min(var(--width-con, 65rem), 94%);
+  @include set-props(background-color, clr-white);
+  border-radius: var(--br);
+  padding: var(--padding);
+  margin: 12vh auto;
+}

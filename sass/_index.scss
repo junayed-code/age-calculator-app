@@ -1,0 +1,78 @@
+@use "./mixin" as *;
+@forward "./fonts";
+@forward "./variables";
+@forward "./base";
+@forward "./typhography";
+
+.form {
+  &__group {
+    min-width: 0;
+    flex-basis: 13.7rem;
+    @include display-flex(column, var(--space-1));
+
+    &--error {
+      --clr-primary: var(--clr-light-red);
+      --clr-secondary: var(--clr-light-red);
+      --border-clr: var(--clr-light-red);
+    }
+  }
+
+  &__label {
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    @include set-props(color, clr-secondary);
+  }
+
+  &__input {
+    min-width: 0;
+    font-size: var(--fs-3);
+    padding: 0.14em 0.5em;
+    border-radius: 5px;
+    border: 1.32px solid var(--border-clr);
+
+    &::placeholder {
+      font-size: 0.95em;
+    }
+
+    &:focus {
+      @include set-props(border-color, clr-primary);
+    }
+  }
+
+  &__button {
+    position: relative;
+
+    button {
+      width: 5.7rem;
+      height: 5.7rem;
+      padding: 1.1em;
+      border-radius: 50%;
+      @include set-props(background-color, clr-primary);
+      transition: background-color 320ms, transform 350ms;
+
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+
+      &:hover {
+        @include set-props(background-color, clr-off-black);
+      }
+    }
+  }
+}
+
+.result {
+  &__value {
+    font-size: 6rem;
+    font-size: var(--fs-4);
+    font-style: italic;
+    line-height: 1.1;
+    font-weight: var(--fw-ex-bold);
+    color: var(--clr-off-black);
+
+    span {
+      color: var(--clr-primary);
+    }
+  }
+}

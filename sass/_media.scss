@@ -1,0 +1,39 @@
+@media (min-width: 38em) {
+  :root {
+    --fs-3: 3.2rem;
+    --space-1: 1rem;
+    --space-2: 2.25rem;
+  }
+
+  main {
+    min-height: 100vh;
+    padding: 2rem 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  footer {
+    position: inherit;
+  }
+
+  .invalid-feedback {
+    min-height: 1.21rem;
+  }
+
+  .line {
+    margin: 2.75rem 0 4rem;
+  }
+
+  .container {
+    --br: 2rem 2rem 14rem 2rem;
+    --padding: 4rem;
+    margin: initial;
+  }
+
+  .form__button button {
+    right: 0;
+    left: initial;
+    transform: translate(0, -50%) scale(1.22);
+  }
+}
