@@ -6,66 +6,65 @@ const inputMonth = form.querySelector("#month");
 const inputYear = form.querySelector("#year");
 const allInputFields = form.querySelectorAll(".form__input");
 const resultFields = document.querySelectorAll(".result__value span");
+const { vlt } = validation; // validation object
+
+// Required validator options
+const vltOptionsRe = {
+  // errorMsg: "This field is required",
+  // bReport: false,
+};
+// Minimum validator options
+const vltOptionsMin = {
+  min: 0,
+};
+
+// Year validator options
+const vltOptionsYear = {};
+
+// Month validator options
+const vltOptionsMonth = {
+  year: inputYear,
+};
+// Day validator options
+const vltOptionsDay = {
+  year: inputYear,
+  month: inputMonth,
+};
+
+// Validation Items
+const validationItemsMap = new Map();
+
+// Set validation into the input element
+validationItemsMap.set(inputDay, [
+  vlt.Required(vltOptionsRe),
+  vlt.DateDay(vltOptionsDay),
+  vlt.Min(vltOptionsMin),
+]);
+
+validationItemsMap.set(inputMonth, [
+  vlt.Required(vltOptionsRe),
+  vlt.DateMonth(vltOptionsMonth),
+  vlt.Min(vltOptionsMin),
+]);
+
+validationItemsMap.set(inputYear, [
+  vlt.Required(vltOptionsRe),
+  vlt.DateYear(vltOptionsYear),
+  vlt.Min(vltOptionsMin),
+]);
 
 class App {
   constructor() {
-    this.today = new Date();
-    this.year = this.today.getFullYear();
-    this.month = this.today.getMonth() + 1;
-    this.day = this.today.getDate();
-
-    form.addEventListener("keydown", (e) => {
-      const allowKeys = [
-        "Backspace",
-        "Tab",
-        "Enter",
-        "ArrowLeft",
-        "ArrowRight",
-      ];
-
-      if (e.target.tagName === "INPUT" && e.target.type === "number") {
-        if (isNaN(e.key) && !allowKeys.includes(e.key)) {
-          e.preventDefault();
-        }
-      }
-    });
-
-    form.addEventListener("submit", (e) => {
-      e.preventDefault();
-
-      if (this.validateInputs()) {
-        const age = this.diffDate(
-          +inputDay.value,
-          +inputMonth.value,
-          +inputYear.value
-        );
-
-        this.displayResult(age);
-      }
-    });
+    // Event Listeners
+    form.addEventListener("keydown", this.#formKeyDown);
+    form.addEventListener("submit", this.#formSubmit.bind(this));
+    inputDay.addEventListener("invalid", this.#inputFieldInvalidAlert);
+    inputMonth.addEventListener("invalid", this.#inputFieldInvalidAlert);
+    inputYear.addEventListener("invalid", this.#inputFieldInvalidAlert);
   }
 
-  isLeapYear(year) {
-    return (
-      (year % 4 === 0 && year % 100 !== 0) ||
-      (year % 100 === 0 && year % 400 === 0)
-    );
-  }
-
-  daysInMonth(month, year) {
-    const monthsLastDate = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-
-    if (month === 2 && this.isLeapYear(year)) {
-      return 29;
-    } else {
-      return monthsLastDate[--month];
-    }
-  }
-
-  validateInputs() {
-    const dayValue = +inputDay.value,
-      monthValue = +inputMonth.value,
-      yearValue = +inputYear.value;
+  #formSubmit(e) {
+    e.preventDefault();
 
     // remove all error alert
     allInputFields.forEach((field) => {
@@ -73,96 +72,58 @@ class App {
       field.parentElement.classList.remove(`form__group--error`);
     });
 
-    // check if any field is empty or check field value less than 1
-    let valid = true;
-    allInputFields.forEach((el) => {
-      if (el.value === "") {
-        this.inputFieldInvalidAlert(el, `This field is required`);
-        valid = false;
-      } else if (el.value < 1) {
-        this.inputFieldInvalidAlert(el, `Must be a valid ${el.id}`);
-        valid = false;
-      }
-    });
-    if (!valid) return false;
+    // prettier-ignore
+    const formValidation = 
+      validation.checkValidationAll(validationItemsMap);
 
-    // if the year is in the future
-    if (yearValue > this.year) {
-      this.inputFieldInvalidAlert(inputYear, `Must be in the past`);
-      return false;
+    if (formValidation) {
+      // Calculate Age
+      const age = this.calcDifferenceOfDate(
+        +inputDay.value,
+        +inputMonth.value,
+        +inputYear.value
+      );
+
+      // Display age value
+      this.#displayResult(age);
     }
-
-    // if the month number is not between 1-12
-    if (monthValue > 12) {
-      this.inputFieldInvalidAlert(inputMonth, `Must be a valid month`);
-      return false;
-    }
-
-    // if the date is invalid
-    if (!this.isValidDate(dayValue, monthValue, yearValue)) {
-      this.inputFieldInvalidAlert(inputDay, `Must be a valid day`);
-      return false;
-    }
-
-    // if the month is in the future
-    if (yearValue === this.year && monthValue > this.month) {
-      this.inputFieldInvalidAlert(inputMonth, `Must be in the past`);
-      return false;
-    }
-
-    // if the date is in the future
-    if (
-      yearValue === this.year &&
-      monthValue === this.month &&
-      dayValue > this.day
-    ) {
-      this.inputFieldInvalidAlert(inputDay, `Must be in the past`);
-      return false;
-    }
-
-    return true;
   }
 
-  inputFieldInvalidAlert(inputField, msg) {
-    inputField.nextElementSibling.textContent = msg;
+  #formKeyDown(e) {
+    // prettier-ignore
+    const allowKeys =
+    [...("0123456789"), "Backspace", "Tab", "Enter", "ArrowLeft", "ArrowRight"];
+
+    if (e.target.tagName === "INPUT" && e.target.type === "number") {
+      if (!allowKeys.includes(e.key)) {
+        e.preventDefault();
+      }
+    }
+  }
+
+  #inputFieldInvalidAlert(e) {
+    e.target.nextElementSibling.textContent = e.target.validationMessage;
 
     allInputFields.forEach((el) => {
       el.parentElement.classList.add("form__group--error");
     });
   }
 
-  displayResult(result = {}) {
+  #displayResult(result) {
     resultFields.forEach((field) => {
       field.textContent = result[field.dataset.resultField];
     });
   }
 
-  diffDate(d, m, y) {
-    const pastDate = new Date(y, m - 1, d);
-    const differenceDate = new Date(this.today - pastDate);
+  calcDifferenceOfDate(day, month, year) {
+    const pastDate = new Date(year, month - 1, day);
+    const differenceOfDate = new Date(Date.now() - pastDate);
 
-    const years = differenceDate.getUTCFullYear() - 1970,
-      months = differenceDate.getUTCMonth(),
-      days = differenceDate.getUTCDate() - 1;
+    const years = differenceOfDate.getUTCFullYear() - 1970,
+      months = differenceOfDate.getUTCMonth(),
+      days = differenceOfDate.getUTCDate() - 1;
 
     return { years, months, days };
-  }
-
-  isValidDate(day, month, year) {
-    // return false, if date is out of range.
-    if ((month === 1 || month > 2) && day > this.daysInMonth(month)) {
-      return false;
-    } else if (month === 2) {
-      // check year is leap year or not
-      const leapYear = this.isLeapYear(year);
-
-      // return false, if year is leap year and date is out of range.
-      if ((leapYear && day > 29) || (!leapYear && day > 28)) {
-        return false;
-      }
-    }
-
-    return true;
   }
 }
 

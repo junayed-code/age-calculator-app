@@ -2,17 +2,14 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- displays site properly based on user's device -->
-
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="32x32"
-      href="./assets/images/favicon-32x32.png"
-    />
-
-    <title>Frontend Mentor | Age calculator app</title>
+    <!-- prettier-ignore -->
+    <meta name="description" content="Ease to calculate your age in day, month, and year" />
+    <meta name="keywords" content="age, calculator, claculate" />
+    <!-- prettier-ignore -->
+    <link rel="icon" type="image/png" sizes="32x32" href="./assets/images/favicon-32x32.png" />
+    <title>Age calculator app</title>
 
     <style>
       .attribution {
@@ -28,13 +25,14 @@
     <link rel="stylesheet" href="style.css" />
 
     <!-- link javaScript -->
+    <script defer src="./js/validation.js"></script>
     <script defer src="./js/script.js"></script>
   </head>
   <body>
     <main>
       <div class="container">
         <h1 class="sr-only">Age calculator app</h1>
-        <form class="form">
+        <form class="form" novalidate>
           <div class="flex-group">
             <div class="form__group">
               <label for="day" class="form__label">Day</label>
